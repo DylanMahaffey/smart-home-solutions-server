@@ -1,0 +1,1 @@
+# smart-home-solutions-server
