@@ -2,8 +2,8 @@ import express, { Request, Response } from 'express'
 import { toggleDevice } from '../business/devices';
 const router = express.Router();
 
-router.get('/:id', async (res: Response, req: Request) => {
-    const {id} = req.params;
+router.get('/:id', async (req: Request, res: Response) => {
+    const id = req.params.id;
     try {
         const success = await toggleDevice(id)
         res.json({ success })

@@ -1,11 +1,12 @@
-import { Client } from 'tplink-smarthome-api'
+import { AnyDeviceDiscovery, Client } from 'tplink-smarthome-api'
+import { HomeDevice } from '../models/devices';
 
 const client = new Client();
 
 client.startDiscovery();
 
 export const getAllDevices = async () => {
-    var devices: any[] = []
+    var devices: HomeDevice[] = []
     await Promise.all(Array.from(client.devices, async ([name, value]) => {
         devices.push({
             type: value.deviceType,
@@ -19,8 +20,15 @@ export const getAllDevices = async () => {
 
 
 export const toggleDevice = async (id: string) => {
-    const device: any = client.devices.get(id)
-    return await device.togglePowerState();
+    const device: unknown = client.devices.get(id)
+    if(isDevice(device))
+        return await device.togglePowerState();
+}
+
+const isDevice = (object: unknown): object is AnyDeviceDiscovery => {
+    if(object !== null && typeof object == "object")
+        return "deviceId" !in object
+    return false
 }
 
 client.stopDiscovery();
